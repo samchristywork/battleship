@@ -93,5 +93,46 @@ void init_ships(board *game_board) {
   }
 }
 
+int get_num_hits(ship *ships, bool guesses[10][10]) {
+  int hits = 0;
+  for (int i = 0; i < 5; i++) {
+    if (ships[i].initialized) {
+      if (ships[i].horizontal) {
+        for (int j = 0; j < ships[i].length; j++) {
+          if (guesses[ships[i].x + j][ships[i].y]) {
+            hits++;
+          }
+        }
+      } else {
+        for (int j = 0; j < ships[i].length; j++) {
+          if (guesses[ships[i].x][ships[i].y + j]) {
+            hits++;
+          }
+        }
+      }
+    }
+  }
+  return hits;
+}
+
+void display_score(board game_board) {
+  int player_1_score =
+      get_num_hits(game_board.player_1_ships, game_board.player_2_guesses);
+  int player_2_score =
+      get_num_hits(game_board.player_2_ships, game_board.player_1_guesses);
+
+  printf("%d/%d\n\n", player_2_score, player_1_score);
+}
+
+void display_board(board game_board, bool masked) {
+  display_score(game_board);
+
+  display(game_board.player_2_ships, game_board.player_1_guesses, masked,
+          game_board.player_1_last_guess);
+  printf("\n");
+  display(game_board.player_1_ships, game_board.player_2_guesses, false,
+          game_board.player_2_last_guess);
+}
+
 int main_game(game *game) {
 }
