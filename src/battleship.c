@@ -33,6 +33,39 @@ void init_board(board *game_board) {
   game_board->player_2_last_guess[1] = -1;
 }
 
+bool check_ships_collision(ship ships[], ship new_ship) {
+  for (int i = 0; i < 5; i++) {
+    if (ships[i].initialized) {
+      if (new_ship.horizontal) {
+        for (int j = 0; j < new_ship.length; j++) {
+          if (ships[i].x == new_ship.x + j && ships[i].y == new_ship.y) {
+            return true;
+          }
+        }
+      } else {
+        for (int j = 0; j < new_ship.length; j++) {
+          if (ships[i].x == new_ship.x && ships[i].y == new_ship.y + j) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
+void random_position(ship *new_ship) {
+  new_ship->horizontal = rand() % 2;
+
+  if (new_ship->horizontal) {
+    new_ship->x = rand() % (10 - new_ship->length);
+    new_ship->y = rand() % 10;
+  } else {
+    new_ship->x = rand() % 10;
+    new_ship->y = rand() % (10 - new_ship->length);
+  }
+}
+
 void init_ships(board *game_board) {
   for (int i = 0; i < 5; i++) {
     game_board->player_1_ships[i].initialized = false;
