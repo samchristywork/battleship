@@ -150,6 +150,13 @@ void display_board(board game_board, bool masked) {
           game_board.player_2_last_guess);
 }
 
+bool has_won(ship *ships, bool guesses[10][10]) {
+  if (get_num_hits(ships, guesses) == 17) {
+    return true;
+  }
+  return false;
+}
+
 void ship_selection(game *game) {
   for (int i = 0; i < 5; i++) {
     game->game_board.player_1_ships[i].initialized = false;
@@ -188,4 +195,46 @@ void ship_selection(game *game) {
 }
 
 int main_game(game *game) {
+  int winner = -1;
+  while (1) {
+    int x, y;
+    reset_cursor();
+    display_board(game->game_board, true);
+    printf("\nEnter coordinates to guess (q to quit, r for random guess): ");
+    char s[10];
+    scanf("%s", s);
+    if (s[0] == 'q') {
+      break;
+    } else if (s[0] == 'r') {
+      random_guess(game->game_board.player_1_guesses,
+                   game->game_board.player_1_last_guess);
+      random_guess(game->game_board.player_2_guesses,
+                   game->game_board.player_2_last_guess);
+      continue;
+    } else if (s[0] < 'A' || s[0] > 'J' || s[1] < '0' || s[1] > '9') {
+      continue;
+    } else {
+      x = s[1] - '0';
+      y = s[0] - 'A';
+    }
+    guess(game->game_board.player_1_guesses, x, y,
+          game->game_board.player_1_last_guess);
+
+    if (has_won(game->game_board.player_2_ships,
+                game->game_board.player_1_guesses)) {
+      winner = 1;
+      break;
+    }
+
+    random_guess(game->game_board.player_2_guesses,
+                 game->game_board.player_2_last_guess);
+
+    if (has_won(game->game_board.player_1_ships,
+                game->game_board.player_2_guesses)) {
+      winner = 2;
+      break;
+    }
+  }
+
+  return winner;
 }
