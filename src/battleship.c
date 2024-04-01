@@ -93,6 +93,22 @@ void init_ships(board *game_board) {
   }
 }
 
+void guess(bool guesses[10][10], int x, int y, int *last_guess) {
+  guesses[x][y] = true;
+  last_guess[0] = x;
+  last_guess[1] = y;
+}
+
+void random_guess(bool guesses[10][10], int *last_guess) {
+  int x = rand() % 10;
+  int y = rand() % 10;
+  while (guesses[x][y]) {
+    x = rand() % 10;
+    y = rand() % 10;
+  }
+  guess(guesses, x, y, last_guess);
+}
+
 int get_num_hits(ship *ships, bool guesses[10][10]) {
   int hits = 0;
   for (int i = 0; i < 5; i++) {
