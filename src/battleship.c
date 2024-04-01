@@ -1,8 +1,8 @@
+#include <display.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <util.h>
-#include <display.h>
 
 typedef struct board {
   bool player_1_guesses[10][10];
@@ -148,6 +148,43 @@ void display_board(board game_board, bool masked) {
   printf("\n");
   display(game_board.player_1_ships, game_board.player_2_guesses, false,
           game_board.player_2_last_guess);
+}
+
+void ship_selection(game *game) {
+  for (int i = 0; i < 5; i++) {
+    game->game_board.player_1_ships[i].initialized = false;
+  }
+  for (int i = 0; i < 5; i++) {
+    reset_cursor();
+    display_board(game->game_board, true);
+    printf("\nPlace ship of length %d\n", lengths[i]);
+    printf("Enter coordinates (e.g. A0, B1, C2, etc.): ");
+    char s[10];
+    scanf("%s", s);
+    int x = s[1] - '0';
+    int y = s[0] - 'A';
+    ship new_ship;
+    new_ship.x = x;
+    new_ship.y = y;
+    new_ship.length = lengths[i];
+
+    printf("Enter orientation (h for horizontal, v for vertical): ");
+    char o[10];
+    scanf("%s", o);
+    if (o[0] == 'v') {
+      new_ship.horizontal = true;
+    } else {
+      new_ship.horizontal = false;
+    }
+
+    if (check_ships_collision(game->game_board.player_1_ships, new_ship)) {
+      i--;
+      continue;
+    }
+
+    game->game_board.player_1_ships[i] = new_ship;
+    game->game_board.player_1_ships[i].initialized = true;
+  }
 }
 
 int main_game(game *game) {
