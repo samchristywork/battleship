@@ -238,3 +238,33 @@ int main_game(game *game) {
 
   return winner;
 }
+
+int main() {
+  game game;
+
+  init_board(&game.game_board);
+  init_ships(&game.game_board);
+
+  alternate_screen();
+  clear_screen();
+
+  printf("Do you want to select ship positions? (y/n): ");
+  if (getchar() == 'y') {
+    clear_screen();
+    ship_selection(&game);
+  }
+
+  clear_screen();
+
+  int winner = main_game(&game);
+  normal_screen();
+
+  printf("Final board:\n\n");
+  display_board(game.game_board, false);
+
+  if (winner != -1) {
+    printf("\nPlayer %d wins!\n", winner);
+  } else {
+    printf("\nGame ended in a draw!\n");
+  }
+}
