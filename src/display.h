@@ -11,7 +11,6 @@ typedef struct ship {
   bool initialized;
 } ship;
 
-void display(ship *ships, bool guesses[10][10], bool masked,
-             int last_guess[2]);
+void display(ship *ships, bool guesses[10][10], bool masked, int last_guess[2]);
 
 #endif

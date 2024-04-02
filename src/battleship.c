@@ -13,10 +13,6 @@ typedef struct board {
   int player_2_last_guess[2];
 } board;
 
-typedef struct game {
-  board game_board;
-} game;
-
 int lengths[5] = {2, 3, 3, 4, 5};
 
 void init_board(board *game_board) {
@@ -157,13 +153,13 @@ bool has_won(ship *ships, bool guesses[10][10]) {
   return false;
 }
 
-void ship_selection(game *game) {
+void ship_selection(board *board) {
   for (int i = 0; i < 5; i++) {
-    game->game_board.player_1_ships[i].initialized = false;
+    board->player_1_ships[i].initialized = false;
   }
   for (int i = 0; i < 5; i++) {
     reset_cursor();
-    display_board(game->game_board, true);
+    display_board(*board, true);
     printf("\nPlace ship of length %d\n", lengths[i]);
     printf("Enter coordinates (e.g. A0, B1, C2, etc.): ");
     char s[10];
@@ -184,32 +180,30 @@ void ship_selection(game *game) {
       new_ship.horizontal = false;
     }
 
-    if (check_ships_collision(game->game_board.player_1_ships, new_ship)) {
+    if (check_ships_collision(board->player_1_ships, new_ship)) {
       i--;
       continue;
     }
 
-    game->game_board.player_1_ships[i] = new_ship;
-    game->game_board.player_1_ships[i].initialized = true;
+    board->player_1_ships[i] = new_ship;
+    board->player_1_ships[i].initialized = true;
   }
 }
 
-int main_game(game *game) {
+int main_game(board *board) {
   int winner = -1;
   while (1) {
     int x, y;
     reset_cursor();
-    display_board(game->game_board, true);
+    display_board(*board, true);
     printf("\nEnter coordinates to guess (q to quit, r for random guess): ");
     char s[10];
     scanf("%s", s);
     if (s[0] == 'q') {
       break;
     } else if (s[0] == 'r') {
-      random_guess(game->game_board.player_1_guesses,
-                   game->game_board.player_1_last_guess);
-      random_guess(game->game_board.player_2_guesses,
-                   game->game_board.player_2_last_guess);
+      random_guess(board->player_1_guesses, board->player_1_last_guess);
+      random_guess(board->player_2_guesses, board->player_2_last_guess);
       continue;
     } else if (s[0] < 'A' || s[0] > 'J' || s[1] < '0' || s[1] > '9') {
       continue;
@@ -217,20 +211,16 @@ int main_game(game *game) {
       x = s[1] - '0';
       y = s[0] - 'A';
     }
-    guess(game->game_board.player_1_guesses, x, y,
-          game->game_board.player_1_last_guess);
+    guess(board->player_1_guesses, x, y, board->player_1_last_guess);
 
-    if (has_won(game->game_board.player_2_ships,
-                game->game_board.player_1_guesses)) {
+    if (has_won(board->player_2_ships, board->player_1_guesses)) {
       winner = 1;
       break;
     }
 
-    random_guess(game->game_board.player_2_guesses,
-                 game->game_board.player_2_last_guess);
+    random_guess(board->player_2_guesses, board->player_2_last_guess);
 
-    if (has_won(game->game_board.player_1_ships,
-                game->game_board.player_2_guesses)) {
+    if (has_won(board->player_1_ships, board->player_2_guesses)) {
       winner = 2;
       break;
     }
@@ -240,10 +230,10 @@ int main_game(game *game) {
 }
 
 int main() {
-  game game;
+  board board;
 
-  init_board(&game.game_board);
-  init_ships(&game.game_board);
+  init_board(&board);
+  init_ships(&board);
 
   alternate_screen();
   clear_screen();
@@ -251,16 +241,16 @@ int main() {
   printf("Do you want to select ship positions? (y/n): ");
   if (getchar() == 'y') {
     clear_screen();
-    ship_selection(&game);
+    ship_selection(&board);
   }
 
   clear_screen();
 
-  int winner = main_game(&game);
+  int winner = main_game(&board);
   normal_screen();
 
   printf("Final board:\n\n");
-  display_board(game.game_board, false);
+  display_board(board, false);
 
   if (winner != -1) {
     printf("\nPlayer %d wins!\n", winner);
