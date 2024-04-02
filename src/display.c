@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <util.h>
 
-int check_for_ship(ship *ships, int x, int y) {
+int check_for_ship(Ship *ships, int x, int y) {
   for (int i = 0; i < 5; i++) {
     if (ships[i].initialized) {
       if (ships[i].horizontal) {
@@ -23,7 +23,7 @@ int check_for_ship(ship *ships, int x, int y) {
   return -1;
 }
 
-void display(ship *ships, bool guesses[10][10], bool masked,
+void display(Ship *ships, bool guesses[10][10], bool masked,
              int last_guess[2]) {
   grey_text();
   printf("  A B C D E F G H I J\n");

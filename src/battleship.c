@@ -105,6 +105,34 @@ void random_guess(bool guesses[10][10], int *last_guess) {
   guess(guesses, x, y, last_guess);
 }
 
+void ai_guess(bool guesses[10][10], int *last_guess, Ship *ships) {
+  for (int x = 0; x < 10; x++) {
+    for (int y = 0; y < 10; y++) {
+      if (guesses[x][y]) {
+        if (check_for_ship(ships, x, y) != -1) {
+          if (x > 0 && !guesses[x - 1][y]) {
+            guess(guesses, x - 1, y, last_guess);
+            return;
+          }
+          if (x < 9 && !guesses[x + 1][y]) {
+            guess(guesses, x + 1, y, last_guess);
+            return;
+          }
+          if (y > 0 && !guesses[x][y - 1]) {
+            guess(guesses, x, y - 1, last_guess);
+            return;
+          }
+          if (y < 9 && !guesses[x][y + 1]) {
+            guess(guesses, x, y + 1, last_guess);
+            return;
+          }
+        }
+      }
+    }
+  }
+  random_guess(guesses, last_guess);
+}
+
 int get_num_hits(Ship *ships, bool guesses[10][10]) {
   int hits = 0;
   for (int i = 0; i < 5; i++) {

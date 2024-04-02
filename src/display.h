@@ -12,5 +12,6 @@ typedef struct Ship {
 } Ship;
 
 void display(Ship *ships, bool guesses[10][10], bool masked, int last_guess[2]);
+int check_for_ship(Ship *ships, int x, int y);
 
 #endif
