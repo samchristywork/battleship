@@ -14,6 +14,7 @@ typedef struct Board {
 } Board;
 
 enum Difficulty {
+  AI_NONE = 0,
   AI_EASY = 1,
   AI_MEDIUM = 2,
   AI_HARD = 3,
@@ -303,7 +304,7 @@ int main() {
     ship_selection(&board);
   }
 
-  printf("Select difficulty (1 for easy, 2 for medium, 3 for hard): ");
+  printf("Select difficulty (1 for easy, 2 for medium, 3 for hard, 0 for no AI): ");
   int difficulty;
   scanf("%d", &difficulty);
 
