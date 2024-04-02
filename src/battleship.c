@@ -7,8 +7,8 @@
 typedef struct Board {
   bool player_1_guesses[10][10];
   bool player_2_guesses[10][10];
-  ship player_1_ships[5];
-  ship player_2_ships[5];
+  Ship player_1_ships[5];
+  Ship player_2_ships[5];
   int player_1_last_guess[2];
   int player_2_last_guess[2];
 } Board;
@@ -29,7 +29,7 @@ void init_board(Board *game_board) {
   game_board->player_2_last_guess[1] = -1;
 }
 
-bool check_ships_collision(ship ships[], ship new_ship) {
+bool check_ships_collision(Ship ships[], Ship new_ship) {
   for (int i = 0; i < 5; i++) {
     if (ships[i].initialized) {
       if (new_ship.horizontal) {
@@ -50,7 +50,7 @@ bool check_ships_collision(ship ships[], ship new_ship) {
   return false;
 }
 
-void random_position(ship *new_ship) {
+void random_position(Ship *new_ship) {
   new_ship->horizontal = rand() % 2;
 
   if (new_ship->horizontal) {
@@ -69,7 +69,7 @@ void init_ships(Board *game_board) {
   }
 
   for (int i = 0; i < 5; i++) {
-    ship new_ship;
+    Ship new_ship;
     new_ship.length = lengths[i];
     random_position(&new_ship);
     while (check_ships_collision(game_board->player_1_ships, new_ship)) {
@@ -79,7 +79,7 @@ void init_ships(Board *game_board) {
   }
 
   for (int i = 0; i < 5; i++) {
-    ship new_ship;
+    Ship new_ship;
     new_ship.length = lengths[i];
     random_position(&new_ship);
     while (check_ships_collision(game_board->player_2_ships, new_ship)) {
@@ -105,7 +105,7 @@ void random_guess(bool guesses[10][10], int *last_guess) {
   guess(guesses, x, y, last_guess);
 }
 
-int get_num_hits(ship *ships, bool guesses[10][10]) {
+int get_num_hits(Ship *ships, bool guesses[10][10]) {
   int hits = 0;
   for (int i = 0; i < 5; i++) {
     if (ships[i].initialized) {
@@ -146,7 +146,7 @@ void display_board(Board game_board, bool masked) {
           game_board.player_2_last_guess);
 }
 
-bool has_won(ship *ships, bool guesses[10][10]) {
+bool has_won(Ship *ships, bool guesses[10][10]) {
   if (get_num_hits(ships, guesses) == 17) {
     return true;
   }
@@ -166,7 +166,7 @@ void ship_selection(Board *board) {
     scanf("%s", s);
     int x = s[1] - '0';
     int y = s[0] - 'A';
-    ship new_ship;
+    Ship new_ship;
     new_ship.x = x;
     new_ship.y = y;
     new_ship.length = lengths[i];

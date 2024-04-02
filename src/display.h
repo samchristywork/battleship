@@ -3,14 +3,14 @@
 
 #include <stdbool.h>
 
-typedef struct ship {
+typedef struct Ship {
   int x;
   int y;
   int length;
   bool horizontal;
   bool initialized;
-} ship;
+} Ship;
 
-void display(ship *ships, bool guesses[10][10], bool masked, int last_guess[2]);
+void display(Ship *ships, bool guesses[10][10], bool masked, int last_guess[2]);
 
 #endif
