@@ -4,18 +4,18 @@
 #include <stdlib.h>
 #include <util.h>
 
-typedef struct board {
+typedef struct Board {
   bool player_1_guesses[10][10];
   bool player_2_guesses[10][10];
   ship player_1_ships[5];
   ship player_2_ships[5];
   int player_1_last_guess[2];
   int player_2_last_guess[2];
-} board;
+} Board;
 
 int lengths[5] = {2, 3, 3, 4, 5};
 
-void init_board(board *game_board) {
+void init_board(Board *game_board) {
   for (int i = 0; i < 10; i++) {
     for (int j = 0; j < 10; j++) {
       game_board->player_1_guesses[i][j] = false;
@@ -62,7 +62,7 @@ void random_position(ship *new_ship) {
   }
 }
 
-void init_ships(board *game_board) {
+void init_ships(Board *game_board) {
   for (int i = 0; i < 5; i++) {
     game_board->player_1_ships[i].initialized = false;
     game_board->player_2_ships[i].initialized = false;
@@ -127,7 +127,7 @@ int get_num_hits(ship *ships, bool guesses[10][10]) {
   return hits;
 }
 
-void display_score(board game_board) {
+void display_score(Board game_board) {
   int player_1_score =
       get_num_hits(game_board.player_1_ships, game_board.player_2_guesses);
   int player_2_score =
@@ -136,7 +136,7 @@ void display_score(board game_board) {
   printf("%d/%d\n\n", player_2_score, player_1_score);
 }
 
-void display_board(board game_board, bool masked) {
+void display_board(Board game_board, bool masked) {
   display_score(game_board);
 
   display(game_board.player_2_ships, game_board.player_1_guesses, masked,
@@ -153,7 +153,7 @@ bool has_won(ship *ships, bool guesses[10][10]) {
   return false;
 }
 
-void ship_selection(board *board) {
+void ship_selection(Board *board) {
   for (int i = 0; i < 5; i++) {
     board->player_1_ships[i].initialized = false;
   }
@@ -190,7 +190,7 @@ void ship_selection(board *board) {
   }
 }
 
-int main_game(board *board) {
+int main_game(Board *board) {
   int winner = -1;
   while (1) {
     int x, y;
@@ -230,7 +230,7 @@ int main_game(board *board) {
 }
 
 int main() {
-  board board;
+  Board board;
 
   init_board(&board);
   init_ships(&board);
