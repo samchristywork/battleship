@@ -13,6 +13,12 @@ typedef struct Board {
   int player_2_last_guess[2];
 } Board;
 
+enum Difficulty {
+  AI_EASY = 1,
+  AI_MEDIUM = 2,
+  AI_HARD = 3,
+};
+
 int lengths[5] = {2, 3, 3, 4, 5};
 
 void init_board(Board *game_board) {
@@ -236,11 +242,12 @@ void ship_selection(Board *board) {
   }
 }
 
-int main_game(Board *board) {
+int main_game(Board *board, int difficulty) {
   int winner = -1;
   while (1) {
     int x, y;
     reset_cursor();
+    printf("Difficulty: %d\n", difficulty);
     display_board(*board, true);
     printf("\nEnter coordinates to guess (q to quit, r for random guess): ");
     char s[10];
@@ -249,22 +256,28 @@ int main_game(Board *board) {
       break;
     } else if (s[0] == 'r') {
       random_guess(board->player_1_guesses, board->player_1_last_guess);
-      random_guess(board->player_2_guesses, board->player_2_last_guess);
-      continue;
     } else if (s[0] < 'A' || s[0] > 'J' || s[1] < '0' || s[1] > '9') {
       continue;
     } else {
       x = s[1] - '0';
       y = s[0] - 'A';
+      guess(board->player_1_guesses, x, y, board->player_1_last_guess);
     }
-    guess(board->player_1_guesses, x, y, board->player_1_last_guess);
 
     if (has_won(board->player_2_ships, board->player_1_guesses)) {
       winner = 1;
       break;
     }
 
-    random_guess(board->player_2_guesses, board->player_2_last_guess);
+    if (difficulty == AI_EASY) {
+      random_guess(board->player_2_guesses, board->player_2_last_guess);
+    } else if (difficulty == AI_MEDIUM) {
+      ai_guess(board->player_2_guesses, board->player_2_last_guess,
+               board->player_1_ships);
+    } else if (difficulty == AI_HARD) {
+      cheating_ai_guess(board->player_2_guesses, board->player_2_last_guess,
+                        board->player_1_ships);
+    }
 
     if (has_won(board->player_1_ships, board->player_2_guesses)) {
       winner = 2;
@@ -290,9 +303,13 @@ int main() {
     ship_selection(&board);
   }
 
+  printf("Select difficulty (1 for easy, 2 for medium, 3 for hard): ");
+  int difficulty;
+  scanf("%d", &difficulty);
+
   clear_screen();
 
-  int winner = main_game(&board);
+  int winner = main_game(&board, difficulty);
   normal_screen();
 
   printf("Final board:\n\n");
