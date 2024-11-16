@@ -3,6 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <util.h>
+#include <signal.h>
+
+void handle_sigint(int sig) {
+  printf("\nInterrupt signal (%d) received. Exiting gracefully...\n", sig);
+  normal_screen();
+  exit(0);
+}
 
 typedef struct Board {
   bool player_1_guesses[10][10];
@@ -290,6 +297,8 @@ int main_game(Board *board, int difficulty) {
 }
 
 int main() {
+  signal(SIGINT, handle_sigint);
+
   Board board;
 
   init_board(&board);
