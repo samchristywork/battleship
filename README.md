@@ -2,6 +2,10 @@
 
 ## Overview
 
+<p align="center">
+  <img src="./assets/screenshot.png" width=500 />
+</p>
+
 ## Features
 
 ## Setup
