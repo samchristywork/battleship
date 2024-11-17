@@ -6,11 +6,27 @@
   <img src="./assets/screenshot.png" width=500 />
 </p>
 
+This is a simple console-based Battleship game written in C, where you can play
+against different levels of AI or a human opponent.
+
 ## Features
 
 ## Setup
 
+`make build` to build the program, and `make run` to run it.
+
 ## Dependencies
+
+```
+gcc
+make
+```
+
+## AI Levels
+
+- Easy: AI makes random guesses.
+- Medium: AI makes semi-intelligent guesses based on prior hits.
+- Hard: AI has a small chance to cheat by hitting directly on ships.
 
 ## License
 
