@@ -11,6 +11,14 @@ against different levels of AI or a human opponent.
 
 ## Features
 
+- Play against different AI opponents with varying difficulty.
+- The human player can manually place their ships on the board.
+- Collision checks to make sure there are no invalid board placements.
+- Visualization of player and opponents boards with a score readout.
+- Fully interactive gameplay.
+- Gracefully handles SIGINT.
+- ANSI color support.
+
 ## Setup
 
 `make build` to build the program, and `make run` to run it.
