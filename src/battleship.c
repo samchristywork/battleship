@@ -1,9 +1,9 @@
 #include <display.h>
+#include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <util.h>
-#include <signal.h>
 
 void handle_sigint(int sig) {
   printf("\nInterrupt signal (%d) received. Exiting gracefully...\n", sig);
@@ -226,7 +226,7 @@ void ship_selection(Board *board) {
     scanf("%s", s);
     int x = s[1] - '0';
     int y = s[0] - 'A';
-    Ship new_ship;
+    Ship new_ship = {0};
     new_ship.x = x;
     new_ship.y = y;
     new_ship.length = lengths[i];
@@ -313,7 +313,8 @@ int main() {
     ship_selection(&board);
   }
 
-  printf("Select difficulty (1 for easy, 2 for medium, 3 for hard, 0 for no AI): ");
+  printf("Select difficulty (1 for easy, 2 for medium, 3 for hard, 0 for no "
+         "AI): ");
   int difficulty;
   scanf("%d", &difficulty);
 
